@@ -130,3 +130,5 @@ class TestUser(unittest.TestCase):
         user = User()
         string = "[User] ({}) {}".format(user.id, user.__dict__)
         self.assertEqual(string, str(user))
+
+        
