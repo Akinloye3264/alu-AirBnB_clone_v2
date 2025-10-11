@@ -1,40 +1,34 @@
 #!/usr/bin/python3
-""" Function that compress a folder """
-from datetime import datetime
-from fabric.api import *
-import shlex
+from fabric.api import env, run, put
 import os
+# using fabric to automate
 
-
-env.hosts = ['54.235.14.97', '54.205.221.93']
-env.user = "ubuntu"
+env.hosts = ['54.242.117.7', '54.226.19.77']
+env.user = 'ubuntu'
+env.key_filename = '/.ssh'
 
 
 def do_deploy(archive_path):
-    """ The fuction doing Deployments """
+    """
+    distribute zip
+    """
     if not os.path.exists(archive_path):
         return False
-    try:
-        name = archive_path.replace('/', ' ')
-        name = shlex.split(name)
-        name = name[-1]
+    archive_name = os.path.basename(archive_path)
+    archive_name_without_ext = os.path.splitext(archive_name)[0]
+    put(archive_path, '/tmp/')
+    run("mkdir -p /data/web_static/releases/{}/"
+        .format(archive_name_without_ext))
+    run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
+        .format(archive_name, archive_name_without_ext))
+    run("rm /tmp/{}".format(archive_name))
+    run("mv /data/web_static/releases/{}/web_static/* \
+         /data/web_static/releases/{}/"
+        .format(archive_name_without_ext, archive_name_without_ext))
+    run("rm -rf /data/web_static/releases/{}/web_static"
+        .format(archive_name_without_ext))
+    run("rm -rf /data/web_static/current")
+    run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+        .format(archive_name_without_ext))
 
-        wname = name.replace('.', ' ')
-        wname = shlex.split(wname)
-        wname = wname[0]
-
-        releases_path = "/data/web_static/releases/{}/".format(wname)
-        tmp_path = "/tmp/{}".format(name)
-
-        put(archive_path, "/tmp/")
-        run("mkdir -p {}".format(releases_path))
-        run("tar -xzf {} -C {}".format(tmp_path, releases_path))
-        run("rm {}".format(tmp_path))
-        run("mv {}web_static/* {}".format(releases_path, releases_path))
-        run("rm -rf {}web_static".format(releases_path))
-        run("rm -rf /data/web_static/current")
-        run("ln -s {} /data/web_static/current".format(releases_path))
-        print("New version deployed!")
-        return True
-    except:
-        return False
+    return True
