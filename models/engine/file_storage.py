@@ -3,11 +3,6 @@
 import json
 from models.base_model import BaseModel
 from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
 import shlex
 
 
@@ -57,15 +52,25 @@ class FileStorage:
             json.dump(my_dict, f)
 
     def reload(self):
-        """serialize the file path to JSON file path
-        """
-        try:
-            with open(self.__file_path, 'r', encoding="UTF-8") as f:
-                for key, value in (json.load(f)).items():
-                    value = eval(value["__class__"])(**value)
-                    self.__objects[key] = value
-        except FileNotFoundError:
-            pass
+        """Deserialize the JSON file to __objects
+    """
+    try:
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+
+        with open(self.__file_path, 'r', encoding="UTF-8") as f:
+            for key, value in (json.load(f)).items():
+                cls_name = value["__class__"]
+                cls = eval(cls_name)
+                self.__objects[key] = cls(**value)
+    except FileNotFoundError:
+        pass
+
 
     def delete(self, obj=None):
         """ delete an existing element
