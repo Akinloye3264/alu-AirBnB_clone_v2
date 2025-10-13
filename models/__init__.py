@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-"""Initializes the models package"""
+"""This module instantiates the storage engine"""
 from os import getenv
 
-# Determine which storage type to use
 storage_t = getenv("HBNB_TYPE_STORAGE")
 
 if storage_t == "db":
