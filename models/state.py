@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" holds class State"""
+""" holds class State """
 import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 
 
 class State(BaseModel, Base):
-    """Representation of state """
+    """Representation of state"""
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
 
@@ -16,7 +16,7 @@ class State(BaseModel, Base):
     else:
         @property
         def cities(self):
-            """getter for list of city instances related to the state"""
+            """Getter for list of City instances related to the State"""
             from models import storage
             from models.city import City
             city_list = []
