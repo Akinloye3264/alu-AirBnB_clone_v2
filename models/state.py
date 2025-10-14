@@ -2,8 +2,6 @@
 """Defines the State class"""
 
 from models.base_model import BaseModel
-from models.city import City
-from models import storage
 
 
 class State(BaseModel):
@@ -13,9 +11,11 @@ class State(BaseModel):
     @property
     def cities(self):
         """Returns the list of City instances with state_id == State.id"""
+        from models import storage  # ✅ Import inside method to avoid circular import
+        from models.city import City
+
         city_list = []
-        all_cities = storage.all(City).values()
-        for city in all_cities:
+        for city in storage.all(City).values():
             if city.state_id == self.id:
                 city_list.append(city)
         return city_list
