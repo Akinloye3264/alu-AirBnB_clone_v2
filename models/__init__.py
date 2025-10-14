@@ -1,23 +1,12 @@
 #!/usr/bin/python3
-"""Instantiates a storage object"""
-from os import getenv
+"""This module instantiates an object of class FileStorage"""
+import os
 
-storage_t = getenv("HBNB_TYPE_STORAGE")
-
-if storage_t == "db":
+if os.getenv("HBNB_TYPE_STORAGE") == "db":
     from models.engine.db_storage import DBStorage
     storage = DBStorage()
+    storage.reload()
 else:
     from models.engine.file_storage import FileStorage
     storage = FileStorage()
-
-storage.reload()
-
-
-if storage.__class__.__name__ == "FileStorage":
-    from models.state import State
-    if not storage.all(State):
-        default_state = State()
-        default_state.name = "California"
-        storage.new(default_state)
-        storage.save()
+    storage.reload()
