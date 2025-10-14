@@ -23,10 +23,10 @@ class State(BaseModel, Base):
         @property
         def cities(self):
             """
-            Getter attribute that returns the list of City instances
+            Getter that returns the list of City instances
             related to the current State when using FileStorage
             """
-            from models import storage  # ✅ Import inside to avoid circular import
+            from models import storage  # avoid circular import
             from models.city import City
 
             city_list = []
