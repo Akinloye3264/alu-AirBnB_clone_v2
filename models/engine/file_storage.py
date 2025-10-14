@@ -12,7 +12,9 @@ from models.review import Review
 
 
 class FileStorage:
-    """Serializes instances to JSON file and deserializes JSON file to instances"""
+    """
+    Serializes instances to a JSON file and deserializes JSON file to instances
+    """
 
     __file_path = "file.json"
     __objects = {}
@@ -30,7 +32,7 @@ class FileStorage:
     def new(self, obj):
         """Adds a new object to storage dictionary"""
         if obj is not None:
-            key = f"{type(obj).__name__}.{obj.id}"
+            key = "{}.{}".format(type(obj).__name__, obj.id)
             self.__objects[key] = obj
 
     def save(self):
@@ -67,7 +69,7 @@ class FileStorage:
     def delete(self, obj=None):
         """Deletes obj from __objects if it exists"""
         if obj is not None:
-            key = f"{type(obj).__name__}.{obj.id}"
+            key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
 
