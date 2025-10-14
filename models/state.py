@@ -10,9 +10,8 @@ class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
 
-    name = Column(String(128), nullable=False)
-
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        name = Column(String(128), nullable=False)
         # For DBStorage
         cities = relationship(
             "City",
@@ -20,6 +19,9 @@ class State(BaseModel, Base):
             cascade="all, delete, delete-orphan"
         )
     else:
+        # Plain attribute for FileStorage
+        name = ""
+
         @property
         def cities(self):
             """

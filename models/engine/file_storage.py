@@ -12,7 +12,7 @@ from models.review import Review
 
 
 class FileStorage:
-    """Serializes instances to JSON file and deserializes JSON file to instances"""
+    """Serializes instances to JSON and deserializes JSON to instances"""
 
     __file_path = "file.json"
     __objects = {}

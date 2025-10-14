@@ -64,10 +64,9 @@ class DBStorage:
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete an element in the table
-        """
-        if obj:
-            self.session.delete(obj)
+        """delete an element in the table"""
+        if obj is not None:
+            self.__session.delete(obj)
 
     def reload(self):
         """configuration
@@ -78,7 +77,5 @@ class DBStorage:
         self.__session = Session()
 
     def close(self):
-        """ calls remove()
-        """
+        """ calls remove() """
         self.__session.close()
-        
