@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """This is the file storage class for AirBnB"""
 import json
+import shlex
 from models.base_model import BaseModel
 from models.user import User
-import shlex
 
 
 class FileStorage:
@@ -29,7 +29,7 @@ class FileStorage:
                 partition = shlex.split(partition)
                 if (partition[0] == cls.__name__):
                     dic[key] = self.__objects[key]
-            return (dic)
+            return dic
         else:
             return self.__objects
 
@@ -43,8 +43,7 @@ class FileStorage:
             self.__objects[key] = obj
 
     def save(self):
-        """serialize the file path to JSON file path
-        """
+        """serialize the file path to JSON file path"""
         my_dict = {}
         for key, value in self.__objects.items():
             my_dict[key] = value.to_dict()
@@ -52,34 +51,30 @@ class FileStorage:
             json.dump(my_dict, f)
 
     def reload(self):
-        """Deserialize the JSON file to __objects
-    """
-    try:
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.place import Place
-        from models.review import Review
+        """Deserialize the JSON file to __objects"""
+        try:
+            from models.base_model import BaseModel
+            from models.user import User
+            from models.state import State
+            from models.city import City
+            from models.amenity import Amenity
+            from models.place import Place
+            from models.review import Review
 
-        with open(self.__file_path, 'r', encoding="UTF-8") as f:
-            for key, value in (json.load(f)).items():
-                cls_name = value["__class__"]
-                cls = eval(cls_name)
-                self.__objects[key] = cls(**value)
-    except FileNotFoundError:
-        pass
-
+            with open(self.__file_path, 'r', encoding="UTF-8") as f:
+                for key, value in (json.load(f)).items():
+                    cls_name = value["__class__"]
+                    cls = eval(cls_name)
+                    self.__objects[key] = cls(**value)
+        except FileNotFoundError:
+            pass
 
     def delete(self, obj=None):
-        """ delete an existing element
-        """
+        """delete an existing element"""
         if obj:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             del self.__objects[key]
 
     def close(self):
-        """ calls reload()
-        """
+        """calls reload()"""
         self.reload()
