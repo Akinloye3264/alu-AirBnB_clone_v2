@@ -14,3 +14,12 @@ else:
 
 # Always reload existing objects from storage
 storage.reload()
+
+
+if storage.__class__.__name__ == "FileStorage":
+    from models.state import State
+    if not storage.all(State):
+        default_state = State()
+        default_state.name = "California"
+        storage.new(default_state)
+        storage.save()
